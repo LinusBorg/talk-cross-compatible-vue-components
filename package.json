@@ -9,7 +9,18 @@
     "@slidev/cli": "^0.30.3",
     "@slidev/theme-default": "*",
     "@slidev/theme-seriph": "*",
-    "slidev-theme-vuetiful": "^0.1.0"
+    "slidev-theme-vuetiful": "^0.2.1",
+    "vue": "^3.2.35"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "@nuxt/kit",
+        "cypress-image-snapshot",
+        "cypress",
+        "jest"
+      ]
+    }
   },
   "name": "talk-cross-compatible-vue-components"
 }
