@@ -61,8 +61,8 @@ title: We have to...
 
 1. Write <span class="text-vgreen">compatible code</span> that respects breaking changes
 2. Write <span class="text-vgreen">tests</span> that can be run against both versions
-3. Decide how to <span class="text-vgreen">bundle and publish</span> the project
-4. Manage potentially <span class="text-vgreen">conflicting dependencies</span>
+3. Manage <span class="text-vgreen">conflicting dependencies</span>
+4. Decide how to <span class="text-vgreen">bundle and publish</span> the project
 
 </v-clicks>
 
@@ -151,7 +151,7 @@ titleRow: true
 title: "Example: Lifecycle Names - Vue-Bridge helper"
 ---
 
-```js
+```js{all|1,7}
 import {defineComponent } from '@vue-bridge/runtime'
 
 export default defineComponent({
@@ -333,7 +333,7 @@ Flat repositories are bad because:
 ---
 cols: 1-1
 titleRow: true
-title: Clean Dependencies with Workspaces
+title: Clean Dependencies with Workspaces (1)
 ---
 
 ```bash{all|15-17|8-13|3-6}
@@ -359,10 +359,10 @@ vite.config.shared.js   # shared build config
 ---
 cols: 1-1
 titleRow: true
-title: Clean Dependencies with Workspaces
+title: Clean Dependencies with Workspaces (2)
 ---
 
-```bash{15}
+```bash{15|3,4}
 # Folder Structure
 
 lib-vue2/
@@ -384,26 +384,77 @@ vite.config.shared.js   # shared build config
 
 ::right::
 
-```json{2|8-10,13|all}
+<div v-show="$slidev.nav.clicks >= 1">
+
+```json{all|2|8-11,14|all}
 {
-  "name": "vu2-my-package",
+  "name": "vue2-my-package",
   "dependencies": {
     "lodash": "^4.17.21",
     "@vueuse/core": "^8.5.0"
   },
   "devDependencies": {
-    "vue": "^2.6.14",
+    "@vue/test-utils": "^1.0.0",
     "vite-plugin-vue2": "^2",
+    "vue": "^2.6.14",
     "vue-template-compiler": "^2.6.14",
   },
   "peerDependencies": {
     "vue": "^2.6"
   }
 }
-
-
-
 ```
+</div>
+
+---
+cols: 1-1
+titleRow: true
+title: "Clean Dependencies with Workspaces (3)"
+---
+
+```bash{8,9}
+# Folder Structure
+
+lib-vue2/
+├─ package.json
+├─ vite.config.js
+├─ src/                 # --> Symlink to /lib-vue3/src
+
+lib-vue3/
+├─ package.json
+├─ vite.config.js
+├─ src/
+  ├─ index.js
+  ├─ MyComponent.vue
+
+package.json
+pnpm-workspaces.yaml
+vite.config.shared.js   # shared build config
+```
+
+::right::
+
+<div v-show="$slidev.nav.clicks >= 1">
+
+```json{all|2|8-10,13|all}
+{
+  "name": "vue3-my-package",
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "@vueuse/core": "^8.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2",
+    "@vue/test-utils": "^2.0.0-0",
+    "vue": "^3.2.34",
+  },
+  "peerDependencies": {
+    "vue": "^3.2.34"
+  }
+}
+```
+
+</div>
 
 ---
 layout: section
@@ -414,7 +465,7 @@ layout: section
 ---
 cols: '1-1'
 titleRow: true
-title: Bundling and publish as two packages
+title: Bundling and Publishing as two Packages
 ---
 
 ```js
@@ -425,22 +476,21 @@ import { MyComponent } from 'vue2-my-package'
 ```
 
 ```bash
-# Folder Structure
 lib-vue3
 ├─ dist/
   ├─ index.js # Vue 3 Bundle
-├─src/
-  ├─ index.js
-  ├─ MyComponent.vue
+├─ package.json
 lib-vue2
   dist/
   ├─ index.js # Vue 2 Bundle
+├─ package.json
 ```
 ```json
 {
+  "name": "vue{2,3}-my-package"
   "exports": {
     ".": {
-      "import": "dist/index.js"
+      "import": "./dist/index.js"
     },
   }
 }
@@ -463,7 +513,7 @@ lib-vue2
 ---
 cols: '1-1'
 titleRow: true
-title: Bundling and publishing as one Package
+title: Bundling and Publishing as one Package
 ---
 
 ```js
@@ -473,21 +523,21 @@ import { MyComponent } from 'vue-my-package'
 import { MyComponent } from 'vue-my-package/vue2'
 ```
 ```bash
-dist/
-├─ index.js # Vue 3 Bundle
-dist-vue2/
-├─ index.js # Vue 2 Bundle
-src/
-├─ index.js
-├─ MyComponent.vue
+lib-vue3
+  ├─ dist/
+    ├─ index.js # Vue 3 Bundle
+  dist-vue2/
+    ├─ index.js # Vue 2 Bundle
+  package.json
 ```
 ```json
 {
+  "name": "vue-my-package",
   "exports": {
     ".": {
-      "import": "dist/index.js"
+      "import": "./dist/index.js"
     },
-    "./vue2": "dist-vue2/index.js"
+    "./vue2": "./dist-vue2/index.js"
   }
 }
 ```
@@ -500,9 +550,18 @@ src/
     <li><teenyicons-arrow-up-circle-outline  class="stroke-vgreen" viewBox="-1 -1 17 17"/> One package to install regardless of target version</li>
     <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/> Possibly more conflicts with <code>peerDependencies</code></li>
     <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/> Trickier to get right with type declarations</li>
-    <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/>requires workspace setup</li>
+    <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/> requires workspace setup</li>
   </ul>
 </div>
+
+---
+layout: big-points
+title: Template Demo
+---
+
+# Demo Time!
+
+https://github.com/vue-bridge/template-monorepo
 
 ---
 title: Docs
@@ -548,6 +607,12 @@ title: Links Collection
       https://github.com/vue-bridge/template-monorepo
     </a>
   </span>
+  <span>Twitter</span>
+  <span>
+    <a href="https://twitter.com/VueBridge" target="blank" rel="noopener">
+      https://twitter.com/VueBridge
+    </a>
+  </span>
 </div>
 
 ---
@@ -563,10 +628,10 @@ repository: 'github.com/linusborg'
   <p class="text-4xl !leading-[1.5em]">Questions?</p>
 </div>
 <div 
-  class="absolute bottom-6 right-6 w-[200px] p-3 bg-white rounded-lg bg-opacity-50 mr-0"
+  class="absolute bottom-6 right-6 w-[200px] p-3 bg-white light:bg-vblue rounded-lg bg-opacity-50 mr-0 light:bg-opacity-40 mr-0 text-vblue light:text-white"
   v-motion
-  :initial="{ x: 220 }"
-  :enter="{ x: 0, transition: { delay: 1000 } }"
+  :initial="{ x: 250 }"
+  :enter="{ x: 0, transition: { delay: 500 } }"
   >
 
 <a href="https://www.sli.dev" target="blank" rel="noopener">
@@ -574,6 +639,9 @@ repository: 'github.com/linusborg'
 </a>
 
 <p class="text-sm !mt-0">This talk was built with Slidev</p>
+
+<a class="text-sm" href="https://sli.dev" target="_blank" rel="noopener">https://sli.dev</a>
+
 </div>
 
 ---
