@@ -2,6 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@iconify-json/logos': ^1.1.5
+  '@iconify-json/teenyicons': ^1.1.1
   '@iconify-json/uim': ^1.1.1
   '@slidev/cli': ^0.30.3
   '@slidev/theme-default': '*'
@@ -20,6 +21,7 @@ dependencies:
 
 devDependencies:
   '@iconify-json/logos': 1.1.5
+  '@iconify-json/teenyicons': 1.1.1
   '@iconify-json/uim': 1.1.1
 
 packages:
@@ -83,6 +85,12 @@ packages:
     dependencies:
       '@iconify/types': 1.1.0
     dev: false
+
+  /@iconify-json/teenyicons/1.1.1:
+    resolution: {integrity: sha512-3gJdTDGmWQAg90+aGhvJwsziZ+eK3iTVJ4r3AZCXlVer5Zc46aVWEpD0WEZfnbnb/A7lTKSjK+kZsn/aUPqkwA==}
+    dependencies:
+      '@iconify/types': 1.1.0
+    dev: true
 
   /@iconify-json/uim/1.1.1:
     resolution: {integrity: sha512-MoOZx/PJ74M4FpE2v4+qehBfN/05SXExZnw5NuXlmxzeKB2FXGMkjhEhMDvFg6vS2h4S54GxZng+zlLNZy3vIw==}
