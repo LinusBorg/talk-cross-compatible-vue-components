@@ -556,6 +556,19 @@ lib-vue3
 
 ---
 layout: big-points
+titleRow: true
+title: "Vue 2.7"
+---
+
+
+* Native integration of Composition API
+* Need for `vue-demi` / `@vue/composition-api` gone
+* Will potentially streamline a few things in VueBridge
+
+It might be worth to wait until `2.7` drops
+
+---
+layout: big-points
 title: Template Demo
 ---
 
@@ -571,7 +584,7 @@ title: Docs
 ---
 layout: big-points
 titleRow: true
-title: We need Help!
+title: Vue-Bridge needs you!
 ---
 
 * Add missing Documentation chapters
