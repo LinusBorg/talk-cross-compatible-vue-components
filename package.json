@@ -9,6 +9,7 @@
     "@slidev/cli": "^0.30.3",
     "@slidev/theme-default": "*",
     "@slidev/theme-seriph": "*",
+    "@vueuse/core": "^8.5.0",
     "slidev-theme-vuetiful": "^0.2.1",
     "vue": "^3.2.35"
   },
@@ -22,5 +23,9 @@
       ]
     }
   },
-  "name": "talk-cross-compatible-vue-components"
+  "name": "talk-cross-compatible-vue-components",
+  "devDependencies": {
+    "@iconify-json/logos": "^1.1.5",
+    "@iconify-json/uim": "^1.1.1"
+  }
 }

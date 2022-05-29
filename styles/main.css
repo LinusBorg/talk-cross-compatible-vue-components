@@ -1,0 +1,16 @@
+.slidev-layout code {
+  color:  var(--slidev-theme-primary);
+  font-size: .8em;
+  display: inline-block;
+  @apply px-2 rounded-md;
+  background-color: rgba(240,240,240,0.2);
+}
+.slidev-layout .shiki-container code {
+  background-color: unset;
+}
+.light .slidev-layout code {
+  background-color: rgba(230,230,230,0.4);
+}
+.light .slidev-layout .shiki-container code {
+  background-color: unset;
+}
