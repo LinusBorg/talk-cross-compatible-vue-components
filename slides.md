@@ -67,18 +67,37 @@ title: We have to...
 </v-clicks>
 
 ---
-preload:false
+preload: false
+clicks: 6
 ---
 
 # Introducing Vue-Bridge
 
 <VueBridgeContent/>
 
-<!-- 
- - Still incomplete / alpha stage
- - We Focus on runtime & testing libraries
- - More infos in the docs
--->
+<div 
+  v-if="$slidev.nav.clicks === 6"
+  v-motion-pop
+  class="absolute top-[200px] left-[200px] transform -rotate-12 text-3xl p-10 border border-red-500 bg-red-400/80 rounded-lg"
+>
+
+This is still under heavy development
+
+</div>
+
+---
+layout: big-points
+titleRow: true
+title: "Vue 2.7 will make this easier"
+---
+
+* `Vue 2.7-alpha` was released this week
+* Supports Composition API in Vue 2
+* `vue-demi` / `@vue/composition-api` not required anymore
+* allows optimization of a few things in VueBridge
+
+<teenyicons-arrow-right-circle-outline  class="stroke-vgreen" viewBox="-1 -1 17 17"/> It might be worth to wait until `2.7` drops
+
 
 ---
 layout: section
@@ -194,13 +213,18 @@ title: Example - Unit test
 
 ### Vue 3 (test-utils `v2`)
 
-```js{all|5}
+```js{all|5,8-12}
 import { mount } from '@vue/test-utils'
 
 test('displays message', () => {
   const wrapper = mount(MessageComponent, {
     props: {
       msg: 'Hello world'
+    },
+    global: {
+      provide: {
+        store: mockStore
+      }
     }
   })
 
@@ -213,13 +237,16 @@ test('displays message', () => {
 
 ### Vue 2 (test-utils `v1`)
 
-```js{all|5}
+```js{all|5,8-10}
 import { mount } from '@vue/test-utils'
 
 test('displays message', () => {
   const wrapper = mount(MessageComponent, {
     propsData: {
       msg: 'Hello world'
+    },
+    provide: {
+      store: mockStore
     }
   })
 
@@ -246,6 +273,11 @@ test('displays message', () => {
   const wrapper = mount(MessageComponent, {
     props: {
       msg: 'Hello world'
+    },
+    global: {
+      provide: {
+        store: mockStore
+      }
     }
   })
 
@@ -261,10 +293,16 @@ test('displays message', () => {
 ```js
 import { mount } from '@vue-bridge/testing'
 
+
 test('displays message', () => {
   const wrapper = mount(MessageComponent, {
     props: {
       msg: 'Hello world'
+    },
+    global: {
+      provide: {
+        store: mockStore
+      },
     }
   })
 
@@ -286,6 +324,89 @@ test('displays message', () => {
   </ul>
 </div>
 
+
+---
+layout: section
+---
+
+# Build-Time Optimizations
+
+---
+cols: '1-1'
+titleRow: true
+title: Build-time features
+---
+
+```js{all|3,8-9}
+import { defineConfig } from 'vite'
+import { createVuePlugin } from 'vite-plugin-vue2'
+import { vueBridge } from '@vue-bridge/vite-plugin'
+
+export default defineConfig({
+  plugins: [
+    createVuePlugin(),
+    vueBridge({
+      vueVersion: '2',
+    }),
+  ],
+})
+```
+
+::right::
+
+* Support for version-specific style blocks
+* Support for version-specific imports
+* alias trickery for easier source-sharing in monorepos
+
+---
+cols: '1-1'
+titleRow: true
+title: Version-specific styles
+---
+
+```html{all|2,7-8,12-13}
+<template>
+  <div class="root-wrapper">
+    <slot />
+  </div>
+</template>
+<style scoped v2>
+  .root-wrapper /deep/ .class-in-slot {
+    color: red;
+  }
+</style>
+<style scoped v3>
+  .root-wrapper  :deep(.class-in-slot) {
+    color: red;
+  }
+</style>
+```
+
+::right::
+
+* Different deep selectors
+* Different transition styles
+* escape hatch for various style fixes
+
+---
+cols: 1-1
+titleRow: true
+title: Version-specific imports
+---
+
+```js
+import Teleport from './custom/teleport.ts?v-bridge'
+```
+
+```js
+// Compiled for Vue 3
+import Teleport from './custom/teleport.vue3.ts'
+
+```
+```js
+// Compiled for Vue 2
+import Teleport from './custom/teleport.vue2.ts'
+```
 
 ---
 layout: section
@@ -474,6 +595,7 @@ import { MyComponent } from 'vue3-my-package'
 // Vue 2
 import { MyComponent } from 'vue2-my-package'
 ```
+<div v-click>
 
 ```bash
 lib-vue3
@@ -485,6 +607,10 @@ lib-vue2
   ├─ index.js # Vue 2 Bundle
 ├─ package.json
 ```
+
+</div>
+<div v-click>
+
 ```json
 {
   "name": "vue{2,3}-my-package"
@@ -496,6 +622,8 @@ lib-vue2
 }
 ```
 
+</div>
+
 ::right::
 
 <div class="flex h-full justify-center pt-24">
@@ -505,7 +633,6 @@ lib-vue2
     <li><teenyicons-arrow-up-circle-outline  class="stroke-vgreen" viewBox="-1 -1 17 17"/> Separate packages for Vue 2 and Vue 3</li>
     <li><teenyicons-arrow-up-circle-outline  class="stroke-vgreen" viewBox="-1 -1 17 17"/> Clean separation of dependencies</li>
     <li><teenyicons-arrow-up-circle-outline  class="stroke-vgreen" viewBox="-1 -1 17 17"/> straightforward generation of type declarations</li>
-    <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/>requires workspace setup</li>
   </ul>
 
 </div>
@@ -550,22 +677,8 @@ lib-vue3
     <li><teenyicons-arrow-up-circle-outline  class="stroke-vgreen" viewBox="-1 -1 17 17"/> One package to install regardless of target version</li>
     <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/> Possibly more conflicts with <code>peerDependencies</code></li>
     <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/> Trickier to get right with type declarations</li>
-    <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/> requires workspace setup</li>
   </ul>
 </div>
-
----
-layout: big-points
-titleRow: true
-title: "Vue 2.7"
----
-
-
-* Native integration of Composition API
-* Need for `vue-demi` / `@vue/composition-api` gone
-* Will potentially streamline a few things in VueBridge
-
-It might be worth to wait until `2.7` drops
 
 ---
 layout: big-points

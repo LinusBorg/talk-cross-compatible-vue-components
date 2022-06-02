@@ -4,7 +4,7 @@ const enter = { y: 0, opacity: 1 }
 </script>
 <template>
   <div class="grid grid-cols-2 grid-rows-3 w-full h-[400px] gap-5">
-    <div class="bg-light-400 dark:bg-dark-100 rounded-md p-4">
+    <div v-click class="bg-light-400 dark:bg-dark-100 rounded-md p-4">
       <code class="!text-md p-1">@vue-bridge/runtime</code>
       <p>
         Polyfills some bridging code at runtime. Tiny (600b)
