@@ -108,17 +108,19 @@ layout: section
 ---
 cols: '1-1'
 titleRow: true
-title: "Example: Lifecycle names"
+title: "Example: v-model on Components"
 ---
 
 ## Vue 2
-```js
+```js{all|3,7}
 export default {
-  created() {
-    window.addEventListener('resize', this.handler)
+  props: {
+    value: String
   },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.handler)
+  methods: {
+    handleInput(e) {
+      this.$emit('input', e.target.value)
+    }
   }
 }
 ```
@@ -126,13 +128,16 @@ export default {
 ::right::
 
 ## Vue 3
-```js{all|5}
+```js{all|3,5,8}
 export default {
-  created() {
-    window.addEventListener('resize', this.handler)
+  props: {
+    modelValue: String
   },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.handler)
+  emits: ['update: modelValue'],
+  methods: {
+    handleInput(e) {
+      this.$emit('update:modelValue', e.target.value)
+    }
   }
 }
 ```
@@ -140,19 +145,23 @@ export default {
 ---
 cols: '2-1'
 titleRow: true
-title: "Example: Lifecycle Names - Manual Fix"
+title: "Example: v-model - Manual Fix"
 ---
 
-```js
+```js{all|6-9}
 export default {
-  created() {
-    window.addEventListener('resize', this.handler)
+  props: {
+    modelValue: String
   },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.handler)
-  }
-  beforeUnmount() {
-    window.removeEventListener('resize', this.handler)
+  emits: ['update: modelValue'],
+  model: {
+    prop: 'modelValue',
+    event: 'update:modelValue'
+  },
+  methods: {
+    handleInput(e) {
+      this.$emit('update:modelValue', e.target.value)
+    }
   }
 }
 ```
@@ -160,32 +169,34 @@ export default {
 ::right::
 
 * Manual work every time
-* Duplication
-* Error prone
+* Easy to miss
 * Tricky with Typescript
 
 ---
 cols: '2-1'
 titleRow: true
-title: "Example: Lifecycle Names - Vue-Bridge helper"
+title: "Example: v-model - Vue-Bridge helper"
 ---
 
-```js{all|1,7}
+```js{all|1,5,7}
 import {defineComponent } from '@vue-bridge/runtime'
 
 export default defineComponent({
-  created() {
-    window.addEventListener('resize', this.handler)
+  props: {
+    modelValue: String
   },
-  beforeUnmount() {
-    window.removeEventListener('resize', this.handler)
+  emits: ['update: modelValue'],
+  methods: {
+    handleInput(e) {
+      this.$emit('update:modelValue', e.target.value)
+    }
   }
 })
 ```
 ::right::
 
-* Converts hook for Vue 2 at runtime
-* No duplication
+* Write component for Vue 3 (future-proof)
+* `@vue-bridge/runtime` adds model config
 * works fine with TS
 
 ---
@@ -364,7 +375,7 @@ titleRow: true
 title: Version-specific styles
 ---
 
-```html{all|2,7-8,12-13}
+```html{all|2,6-8,11-13}
 <template>
   <div class="root-wrapper">
     <slot />
@@ -398,15 +409,37 @@ title: Version-specific imports
 import Teleport from './custom/teleport.ts?v-bridge'
 ```
 
+<div class="mt-8" v-click>
+
 ```js
 // Compiled for Vue 3
 import Teleport from './custom/teleport.vue3.ts'
 
 ```
+
+</div>
+<div class="mt-8" v-click>
+
 ```js
 // Compiled for Vue 2
 import Teleport from './custom/teleport.vue2.ts'
 ```
+
+</div>
+
+::right::
+
+<ul>
+<li>
+  put version-specific code into dedicated <code>*.vueX.js</code> files
+</li>
+<li v-if="$slidev.nav.clicks >=1">
+  import with <code>?v-bridge</code> query param
+</li>
+<li v-if="$slidev.nav.clicks >=1">
+  <code>@vue/bridge/vite-plugin</code> will resolve file matching the target
+</li>
+</ul> 
 
 ---
 layout: section
