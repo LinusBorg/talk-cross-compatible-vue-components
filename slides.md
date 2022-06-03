@@ -419,7 +419,7 @@ titleRow: true
 title: Dependency issues in flat repositories
 ---
 
-```json{all|8-9|5|10,11|11-12|9,12|14-16}
+```json{all|8-9|5|10,11|11-12|8-9,12|14-16}
 {
   "name": "my-vue-package",
   "dependencies": {
