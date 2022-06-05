@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { images } from '../images'
-console.log(images)
+
 const props = defineProps({
   image: {
     type: String,

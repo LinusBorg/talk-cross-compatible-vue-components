@@ -5,6 +5,7 @@ info: |
   ## Bridging the Gap - Building cross-compatible Vue Components with confidence
   Presentation slides for Vuejs Amsterdam, June 2nd-3rd 2022.
 # persist drawings in exports and build
+download: '/slides-export.pdf'
 drawings:
   persist: false
 ---
@@ -780,6 +781,7 @@ preload: false
 title: Outro
 twitter: '@Linus_Borg'
 repository: 'github.com/linusborg'
+hostedSlides: 'https://github.com/LinusBorg/talk-cross-compatible-vue-components'
 ---
 
 <div class="absolute left-12 top-[200px] right-12 text-center text-light-600">
@@ -802,65 +804,3 @@ repository: 'github.com/linusborg'
 <a class="text-sm" href="https://sli.dev" target="_blank" rel="noopener">https://sli.dev</a>
 
 </div>
-
----
-cols: '1-1'
-titleRow: true
-title: No bundling - Publishing raw SFCs
----
-
-```js
-// Vue 3
-import { MyComponent } from 'vue-my-package'
-// Vue 2
-import { MyComponent } from 'vue-my-package'
-```
-
-```bash
-# Folder Structure
-src/
-├─ index.js
-├─ MyComponent.vue
-```
-
-<code class="!text-xs">package.json</code>
-
-```json
-{
-  "main": "src/index.js"
-}
-```
-
-::right::
-
-<div class="flex h-full justify-center pt-24">
-  <ul class="!list-none">
-    <li><teenyicons-arrow-up-circle-outline  class="stroke-vgreen" viewBox="-1 -1 17 17"/> No build test necessary (for JS)</li>
-    <li><teenyicons-arrow-up-circle-outline  class="stroke-vgreen" viewBox="-1 -1 17 17"/> Can be published in one package</li>
-    <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/> Adds SFC compilation overload to consuming app</li>
-    <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/> Needs additional tooling when using TS</li>
-    <li><teenyicons-arrow-down-circle-outline  class="stroke-red-500" viewBox="-1 -1 17 17"/> Unit tests for both Versions need trickery</li>
-  </ul>
-</div>
-
----
-layout: big-points
-title: Three Levels of support
-titleRow: true
----
-
-1. Have them handled for you
-2. Have them be pointed out to you
-3. Have resources to consult about them.
-
----
-
-# Linting for compat issues
-
-![Eslint rule error for invalid v-model:arg use](/eslint-vmodel.png)
-
-vs:
-
-![Eslint rule error for invalid v-model:arg use](/eslint-vbind-sync.png)
-
-`@vue-bridge/eslint-config` preset uses rules from `eslint-plugin-vue` for both versions:

@@ -1,17 +1,10 @@
 {
+  "name": "talk-cross-compatible-vue-components",
   "private": true,
   "scripts": {
     "build": "slidev build",
     "dev": "slidev --open",
     "export": "slidev export"
-  },
-  "dependencies": {
-    "@slidev/cli": "^0.30.3",
-    "@slidev/theme-default": "*",
-    "@slidev/theme-seriph": "*",
-    "@vueuse/core": "^8.5.0",
-    "slidev-theme-vuetiful": "^0.2.1",
-    "vue": "^3.2.35"
   },
   "pnpm": {
     "peerDependencyRules": {
@@ -23,11 +16,18 @@
       ]
     }
   },
-  "name": "talk-cross-compatible-vue-components",
-  "devDependencies": {
+  "dependencies": {
     "@iconify-json/logos": "^1.1.5",
     "@iconify-json/teenyicons": "^1.1.1",
     "@iconify-json/uim": "^1.1.1",
+    "@slidev/cli": "^0.33.0",
+    "@slidev/theme-default": "*",
+    "@slidev/theme-seriph": "*",
+    "@vueuse/core": "^8.6.0",
+    "slidev-theme-vuetiful": "^0.3.1",
+    "vue": "^3.2.36"
+  },
+  "devDependencies": {
     "playwright-chromium": "^1.22.2"
   }
 }
