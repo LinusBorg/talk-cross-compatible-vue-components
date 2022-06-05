@@ -8,7 +8,7 @@ const props = defineProps({
     required: true
   }
 })
-const imageUrl = computed(() => `url(.${images[props.image].default})`)
+const imageUrl = computed(() => `url(".${images[props.image].default}")`)
 </script>
 <template>
   <div class="slidev-layout bg-image h-full dark:text-dark-600 relative">
